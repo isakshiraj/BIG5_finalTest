@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="/results.css">
+</head>
+<body>
+   <div class="container">
+        <div class="header">
+            <a href="/dashboard?username={{username}}" class="dashboard-btn">Back to Dashboard</a>
+            <button id="downloadBtn" class="download-btn">Download Results as PDF</button>
+        </div>
+        <h1 style="margin-top: -30px;">Results</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Top Personality 1</th>
+                    <th>Top Personality 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each results}}
+                <tr>
+                    <td>{{formatDate this.date}}</td>
+                    <td class="category" data-category="{{this.topPersonality1}}">{{this.topPersonality1}}</td>
+                    <td class="category" data-category="{{this.topPersonality2}}">{{this.topPersonality2}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Popup structure -->
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <span id="closePopup" class="close-btn">&times;</span>
+            <h2 id="popupTitle"></h2>
+            <img id="popupImage" src="" alt="Category Image">
+            <p id="popupDefinition"></p>
+            <p id="popupDescription"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const username = '{{username}}';
+            window.location.href = `/download-results-pdf?username=${username}`;
+        });
+
+        // Add event listener for category clicks
+        document.querySelectorAll('.category').forEach(function(categoryElement) {
+            categoryElement.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                displayPopup(category);
+            });
+        });
+
+        document.getElementById('closePopup').addEventListener('click', function() {
+            document.getElementById('popup').classList.add('hidden');
+        });
+
+        const careers = {
+    Extraversion: {
+                title: "EXTRAVERSION", 
+            definition: " Extraversion delineates an individual's proclivity for actively pursuing social interactions and stimulation, coupled with their degree of enthusiasm and assertiveness in social contexts.",
+            description: "Those scoring high on extraversion exhibit traits marked by outgoing, sociable, and talkative tendencies, demonstrating a preference for social engagement. Characterized by elevated energy levels, enthusiasm, and assertiveness, individuals with high extraversion scores are often inclined towards dynamic and lively social situations. This trait may also manifest in a greater likelihood to partake in risk-taking behaviors, including but not limited to activities such as partying and drinking, indicative of a predisposition towards excitement-seeking endeavors", 
+            image: "/big5test/images/5Extraversion.png" 
+            },
+            Agreeableness: {
+                title: "AGREEABLENESS", 
+                definition: " Agreeableness is associated with positive outcomes in interpersonal relationships, job performance, and mental health.", 
+                description: "High scorers typically have supportive relationships, excel in teamwork-oriented careers, and experience better mental health. Excessive agreeableness,though, may lead to negative consequences such as over-compliance and a lack of assertiveness. The person is moderately agreeable. They demonstrate trust, fostering forgiving relationships. Their straightforward communication style is non-demanding, promoting clarity. Altruism is evident, reflecting warmth and care. Their compliance and non-stubborn nature contribute to harmonious interactions. Modesty is apparent, and they exhibit tender-mindedness, showing sympathy and emotional sensitivity.", 
+              
+                image: "/big5test/images/5Agreeableness.png" 
+            },
+            Conscientiousness: {
+                title: "CONSCIENTIOUSNESS", 
+                definition: "Conscientiousness denotes an individual's degree of organization, dependability, and goal-oriented behavior. ",
+                description: " Highly conscientious individuals are disciplined, diligent, and meticulous in their approach to tasks. They tend to plan ahead, follow schedules, and pay attention to detail. This trait is often associated with academic and professional success due to the ability to stay focused and complete tasks efficiently. In the real world, conscientiousness can be observed through behaviors such as punctuality, careful planning, and a strong sense of duty and responsibility. These individuals are likely to set high personal standards, strive for excellence in their work, and manage their time effectively. Their reliable nature makes them valuable team members and leaders in various settings.", 
+           
+                image: "/big5test/images/5Concientiousness.png" 
+            },
+            Neuroticism: {
+                title: "NEUROTICISM",
+                definition: "Neuroticism refers to an individual's tendency to experience negative emotions such as anxiety, sadness, and irritability.",
+                description: "Those with high scores in neuroticism are more likely to perceive situations as threatening or challenging and may struggle with stress management. They often display a higher sensitivity to stress, worry excessively about various aspects of their lives, and may feel overwhelmed by minor setbacks. This trait can manifest in real-world scenarios through behaviors such as frequent worrying about job performance, overreacting to constructive criticism, or feeling disproportionately upset by personal conflicts. High neuroticism can impact personal relationships and professional life, potentially leading to difficulties in maintaining emotional stability and a tendency towards mood swings.", 
+               
+                image: "/big5test/images/5Neuroticism.png" 
+            },
+            Openness: {
+                title: "OPENNESS",
+                definition: "Openness characterizes an individual's openness to new experiences, intellectual curiosity, and appreciation for art, adventure, and unusual ideas. ", 
+                description: "People with high levels of openness tend to be imaginative, creative, and open-minded. They are often curious about the world around them and are eager to explore novel ideas and unconventional paths. This trait can be seen in real-world behaviors such as seeking out new experiences, embracing diversity and cultural differences, and showing a keen interest in artistic and intellectual pursuits. Individuals with high openness might pursue careers that allow for creativity and innovation, engage in lifelong learning, and often enjoy hobbies that involve exploring new concepts and perspectives.", 
+           
+                image: "/big5test/images/5Openness.png" 
+            
+            }
+        
+};
+
+        function displayPopup(category) {
+            const career = careers[category];
+            if (career) {
+                document.getElementById('popupTitle').innerText = career.title;
+                document.getElementById('popupDefinition').innerText = career.definition;
+                document.getElementById('popupDescription').innerText = career.description;
+                document.getElementById('popupImage').src = career.image;
+                document.getElementById('popup').classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
